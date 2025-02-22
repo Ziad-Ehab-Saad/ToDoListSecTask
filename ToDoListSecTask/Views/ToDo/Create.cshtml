@@ -1,0 +1,58 @@
+﻿@model ToDoList
+
+<form method="post" asp-action="CreateItem" asp-controller="ToDo" enctype="multipart/form-data">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="DeadLine"></label>
+        <input asp-for="DeadLine" type="datetime-local" class="form-control" />
+        <span asp-validation-for="DeadLine" class="text-danger"></span>
+    </div>
+
+    <div class="my-3">
+        <label>Upload File</label>
+        <input type="file" name="file" id="fileInput" class="form-control" />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+
+    <div class="my-3">
+        <label>Image Preview:</label>
+        <br />
+        <img id="imagePreview"
+             src="@(string.IsNullOrEmpty(Model?.File) ? "" : Url.Content("~/Images/" + Model.File))"
+             alt="Uploaded Image"
+             width="150"
+             height="150"
+             style="display: @(string.IsNullOrEmpty(Model?.File) ? "none" : "block"); border: 1px solid #ddd; padding: 5px;" />
+    </div>
+
+    <div>
+        <input class="btn btn-success" type="submit" value="Create" />
+    </div>
+</form>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.getElementById("imagePreview");
+                img.src = e.target.result;
+                img.style.display = "block"; 
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

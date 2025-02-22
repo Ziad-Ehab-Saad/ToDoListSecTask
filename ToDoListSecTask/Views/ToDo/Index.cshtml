@@ -1,0 +1,60 @@
+﻿<a asp-controller="ToDo" asp-action="Create" class="btn btn-primary my-3">Create</a>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>DeadLine</th>
+            <th>File</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.DeadLine</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.File))
+                    {
+                        var filePath = Url.Content("~/Images/" + item.File);
+                        <a href="@filePath" download class="btn btn-sm btn-primary">Download</a>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="ToDo" class="btn btn-warning" asp-action="Edit" asp-route-id="@item.id">Edit</a>
+                    <a href="#" class="btn btn-danger" onclick="confirmDelete(@item.id)">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(id) {
+        var deleteUrl = "/ToDo/Delete/" + id;
+        document.getElementById("confirmDeleteBtn").href = deleteUrl;
+        var modal = new bootstrap.Modal(document.getElementById("deleteModal"));
+        modal.show();
+    }
+</script>
